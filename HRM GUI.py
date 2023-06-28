@@ -2,18 +2,54 @@ from tkinter import *
 from PIL import Image,ImageTk
 from PIL import Image, ImageDraw
 from tkinter import messagebox
+from cryptography.fernet import Fernet
+
+
+encryption_key = Fernet.generate_key()  # Convert the integer to bytes
+cipher_suite = Fernet(encryption_key)
+
+
+def xor_encrypt_decrypt(data, key):
+    encrypted_data = "".join(chr(ord(c) ^ key) for c in data)
+    return encrypted_data
 
 def login():
   username = entry_username.get()
   password = entry_password.get()
 
-  # Validate the username and password
-  if username == "" or password == "":
-       messagebox.showerror("Login Failed", "Please enter username and password")
-  elif username == "admin" and password == "password":
-       messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
-  else:
-       messagebox.showerror("Login Failed", "Invalid username or password")
+  try:
+      # Read the encrypted credentials from the file
+      count = 0
+      with open("admin.txt") as fp:
+          encrypted_username = fp.readline().strip()
+          encrypted_password = fp.readline().strip()
+
+      print("username: ", encrypted_username)
+      print("password: ", encrypted_password)
+
+      key = 73
+
+      # Decrypt the message
+      decrypted_user = xor_encrypt_decrypt(encrypted_username, key)
+      #print("Decrypted Message:", decrypted_user)
+
+      # Decrypt the message
+      decrypted_pass = xor_encrypt_decrypt(encrypted_password, key)
+      #print("Decrypted Message:", decrypted_pass)
+
+      # Check if the decrypted username and password match the entered values
+      if decrypted_user == username and decrypted_pass == password:
+          messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+      elif username == "admin" and password == "password":
+          messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+          #menu function
+      else:
+          messagebox.showerror("Login Failed", "Invalid username or password")
+  except FileNotFoundError:
+       status_label.config(text="Credentials not found")
+
+
+
 def on_username_focus_in(event):
     if entry_username.get() == "Username":
         entry_username.delete(0, END)
@@ -101,7 +137,7 @@ logox = (Image.open("Picadililogox.png"))
 logox_resize = logox.resize((85, 85), Image.LANCZOS)
 logox_img = ImageTk.PhotoImage(logox_resize)
 
-#Makes the main window center
+#========================Makes the main window center============================================
 window_width = 800   # define window dimensions width and height
 window_height = 500
 screen_width = main_window.winfo_screenwidth()    # get the screen size of your computer
@@ -130,10 +166,7 @@ title_label.place(x=10, y=10)
 close_button = Button(title_bar, text='X', font=('Tahoma', 10, 'bold'), width=1, command=close_window,bg='#EEBA2B' )
 close_button.pack(side=RIGHT)
 
-
-
-
-#Logo canvas
+#=================================use Images=======================================================
 logo_canvas = Canvas(main_window, width=400, height=125, borderwidth=0, highlightthickness=0)
 logo_canvas.create_rectangle(0, 0, 400, 200, fill="#0D0D0D")
 logo_canvas.place(x=0, y=165)
@@ -142,20 +175,18 @@ name_label.place(x=104, y=200)
 logox_label = Label(image=logox_img, borderwidth=0, highlightthickness=0, bg='#0D0D0D')
 logox_label.place(x=13, y=186)
 
-#Log in canvas
+#====================================Log in Frame===================================================
 canvas = Canvas(main_window, width = 310, height = 380, borderwidth=0, highlightthickness=0, bg='black')
-my_rectangle = roundPolygon([8, 300, 300, 8], [3, 3, 375, 375], 5 , width=3, outline="#272022", fill="#272022")
+my_rectangle = roundPolygon([8, 300, 300, 8], [3, 3, 375, 375], 5, width=3, outline="#272022", fill="#272022")
 canvas.place(x=445, y=73)
 
 
-#Log in Label
 login_label = Label(main_window, text="Welcome, Admin!",
                   font=('Sans', 20, 'bold'),
                   fg='white', bg='#272022', padx=0, pady=0)
 login_label.place(x=480, y=127)
 
 
-# Create rounded corner text boxes
 userlog = Canvas(main_window, width=250, height = 40, borderwidth=0, highlightthickness=0, bg='white')
 #rectlog = roundPolygon([5, 100, 100, 5], [3, 3, 30, 30], 5, width=3, outline="#FFFFFF", fill="#FFFFFF")
 userlog.place(x=473, y=190)
@@ -166,7 +197,6 @@ entry_username.insert(0, "Username")
 entry_username.bind("<FocusIn>", on_username_focus_in)
 entry_username.bind("<FocusOut>", on_username_focus_out)
 entry_username.place(x=490, y=201)
-
 
 passlog = Canvas(main_window, width=250, height = 40, borderwidth=0, highlightthickness=0, bg='white')
 #rectlog = roundPolygon([5, 100, 100, 5], [3, 3, 30, 30], 5, width=3, outline="#FFFFFF", fill="#FFFFFF")
@@ -179,11 +209,12 @@ entry_password.bind("<FocusIn>", on_password_focus_in)
 entry_password.bind("<FocusOut>", on_password_focus_out)
 entry_password.place(x=490, y=265)
 
-# Create rounded corner login button
 button_login = Button(main_window, text="LOGIN", font=('Sans', 12, 'bold'), command=login, width=38, bg='#EEBA2B')
 button_login.config(relief=GROOVE, bd=2, width=24)
 button_login.place(x=473, y=350)
 
+status_label = Label(main_window, text="", font=('Sans', 12, 'bold'), fg='white', width=24, height=1, bg='#272022')
+status_label.place(x=473, y=313)
 
 
 main_window.mainloop() #runs main_window
