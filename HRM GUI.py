@@ -2,11 +2,38 @@ from tkinter import *
 from PIL import Image,ImageTk
 from PIL import Image, ImageDraw
 from tkinter import messagebox
-from cryptography.fernet import Fernet
 
 
-encryption_key = Fernet.generate_key()  # Convert the integer to bytes
-cipher_suite = Fernet(encryption_key)
+def menu_window(): #FUNCTION FOR MENU
+    menu = Tk()
+    main_window.destroy()
+    menu.overrideredirect(True)  # Remove window decorations
+    menu.configure(bg='black')  # Set background color of the entire window
+    windowx_width = 1000  # define window dimensions width and height
+    windowx_height = 700
+    screenx_width = main_window.winfo_screenwidth()  # get the screen size of your computer
+    screenx_height = main_window.winfo_screenheight()
+
+    positionx_top = int(screen_height / 2.5 - window_height / 2.5)  # Get the window position from the top dynamically
+    positionx_right = int(screen_width / 2 - window_width / 2)  # as well as position from left or right as follows
+
+    menu.geometry(
+        f'{windowx_width}x{windowx_height}+{positionx_right}+{positionx_top}')  # this is the line that will center your window
+
+    # Create a custom title bar
+    title = Frame(main_window, bg='#EEBA2B', height=30)
+    title.configure(height=38)
+    title.pack(fill=X)
+
+    # Add title label to the title bar
+    title_lbl = Label(title_bar, text='Picadili Travels : Hotel Reservation System', fg='white', bg='#EEBA2B')
+    title_lbl.place(x=10, y=10)
+
+    # Add close button to the title bar
+    close_bttn = Button(title_bar, text='X', font=('Tahoma', 10, 'bold'), width=1, command=close_window, bg='#EEBA2B')
+    close_bttn.pack(side=RIGHT)
+
+    menu.mainloop()
 
 
 def xor_encrypt_decrypt(data, key):
@@ -24,30 +51,25 @@ def login():
           encrypted_username = fp.readline().strip()
           encrypted_password = fp.readline().strip()
 
-      print("username: ", encrypted_username)
-      print("password: ", encrypted_password)
+      #print("username: ", encrypted_username) TEST
+      #print("password: ", encrypted_password) TEST
 
       key = 73
 
       # Decrypt the message
       decrypted_user = xor_encrypt_decrypt(encrypted_username, key)
-      #print("Decrypted Message:", decrypted_user)
-
-      # Decrypt the message
       decrypted_pass = xor_encrypt_decrypt(encrypted_password, key)
-      #print("Decrypted Message:", decrypted_pass)
 
       # Check if the decrypted username and password match the entered values
       if decrypted_user == username and decrypted_pass == password:
           messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+          menu_window()
       elif username == "admin" and password == "password":
           messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
-          #menu function
       else:
           messagebox.showerror("Login Failed", "Invalid username or password")
   except FileNotFoundError:
        status_label.config(text="Credentials not found")
-
 
 
 def on_username_focus_in(event):
@@ -117,10 +139,6 @@ def close_window():
     main_window.destroy()
 
 main_window = Tk()
-main_window.title("Picadili Travels")
-#main_window.attributes('-alpha', 0.7) # set color to transparent
-main_window.config(bg='black')
-
 main_window.overrideredirect(True)  # Remove window decorations
 main_window.configure(bg='black')  # Set background color of the entire window
 
@@ -216,8 +234,12 @@ button_login.place(x=473, y=350)
 status_label = Label(main_window, text="", font=('Sans', 12, 'bold'), fg='white', width=24, height=1, bg='#272022')
 status_label.place(x=473, y=313)
 
-
 main_window.mainloop() #runs main_window
+
+
+
+
+
 
 
 
