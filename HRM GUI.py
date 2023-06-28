@@ -1,16 +1,94 @@
 from tkinter import *
 from PIL import Image,ImageTk
 from PIL import Image, ImageDraw
+from tkinter import messagebox
+
+def login():
+  username = entry_username.get()
+  password = entry_password.get()
+
+  # Validate the username and password
+  if username == "" or password == "":
+       messagebox.showerror("Login Failed", "Please enter username and password")
+  elif username == "admin" and password == "password":
+       messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+  else:
+       messagebox.showerror("Login Failed", "Invalid username or password")
+def on_username_focus_in(event):
+    if entry_username.get() == "Username":
+        entry_username.delete(0, END)
+        entry_username.config(fg="black")
+
+def on_username_focus_out(event):
+    if entry_username.get() == "":
+        entry_username.insert(0, "Username")
+        entry_username.config(fg="gray")
+
+def on_password_focus_in(event):
+    if entry_password.get() == "Password":
+        entry_password.delete(0, END)
+        entry_password.config(show="*", fg="black")
+
+def on_password_focus_out(event):
+    if entry_password.get() == "":
+        entry_password.insert(0, "Password")
+        entry_password.config(show="", fg="gray")
+
+def roundPolygon(x, y, sharpness, **kwargs):
+
+    # The sharpness here is just how close the sub-points
+    # are going to be to the vertex. The more the sharpness,
+    # the more the sub-points will be closer to the vertex.
+    # (This is not normalized)
+    if sharpness < 5:
+        sharpness = 5
+
+    ratioMultiplier = sharpness - 1
+    ratioDividend = sharpness
+
+    # Array to store the points
+    points = []
+
+    # Iterate over the x points
+    for i in range(len(x)):
+        # Set vertex
+        points.append(x[i])
+        points.append(y[i])
+
+        # If it's not the last point
+        if i != (len(x) - 1):
+            # Insert submultiples points. The more the sharpness, the more these points will be
+            # closer to the vertex.
+            points.append((ratioMultiplier*x[i] + x[i + 1])/ratioDividend)
+            points.append((ratioMultiplier*y[i] + y[i + 1])/ratioDividend)
+            points.append((ratioMultiplier*x[i + 1] + x[i])/ratioDividend)
+            points.append((ratioMultiplier*y[i + 1] + y[i])/ratioDividend)
+        else:
+            # Insert submultiples points.
+            points.append((ratioMultiplier*x[i] + x[0])/ratioDividend)
+            points.append((ratioMultiplier*y[i] + y[0])/ratioDividend)
+            points.append((ratioMultiplier*x[0] + x[i])/ratioDividend)
+            points.append((ratioMultiplier*y[0] + y[i])/ratioDividend)
+            # Close the polygon
+            points.append(x[0])
+            points.append(y[0])
+
+            return canvas.create_polygon(points, **kwargs, smooth=TRUE)
+            #return userlog.create_polygon(points, **kwargs, smooth=TRUE)
+
+
+def close_window():
+    main_window.destroy()
 
 main_window = Tk()
 main_window.title("Picadili Travels")
 #main_window.attributes('-alpha', 0.7) # set color to transparent
 main_window.config(bg='black')
 
-# image declaration/ Load image
-logo_img = PhotoImage(file='PicadiliLogo.png')
+main_window.overrideredirect(True)  # Remove window decorations
+main_window.configure(bg='black')  # Set background color of the entire window
 
-
+#Image declaration
 suite = (Image.open("suite.png"))
 suite_resize = suite.resize((400, 500), Image.LANCZOS)
 suite_img = ImageTk.PhotoImage(suite_resize)
@@ -34,16 +112,25 @@ position_right = int(screen_width / 2 - window_width / 2)  # as well as position
 
 main_window.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}') #this is the line that will center your window
 
-#Log in Label
-
-#login_label = Label(main_window, text="Welcome, Admin!",
- #                 font=('Tahoma', 25, 'bold'),
-  #                fg='black', bg='yellow', padx= 250, pady= 30)
-#login_label.place(x=50, y=9)
 
 #Logo label
 logo_label = Label(image=suite_img, borderwidth=0, highlightthickness=0)
 logo_label.place(x=0, y=0)
+
+# Create a custom title bar
+title_bar = Frame(main_window, bg='#EEBA2B', height=30)
+title_bar.configure(height=38)
+title_bar.pack(fill=X)
+
+# Add title label to the title bar
+title_label = Label(title_bar, text='Picadili Travels : Hotel Reservation System', fg='white', bg='#EEBA2B')
+title_label.place(x=10, y=10)
+
+# Add close button to the title bar
+close_button = Button(title_bar, text='X', font=('Tahoma', 10, 'bold'), width=1, command=close_window,bg='#EEBA2B' )
+close_button.pack(side=RIGHT)
+
+
 
 
 #Logo canvas
@@ -55,39 +142,52 @@ name_label.place(x=104, y=200)
 logox_label = Label(image=logox_img, borderwidth=0, highlightthickness=0, bg='#0D0D0D')
 logox_label.place(x=13, y=186)
 
-#Log in canvas // UNFINISHED WORK
-login_canvas = Canvas(main_window, width=400, height=400, borderwidth=0, highlightthickness=0)
-login_canvas.create_rectangle(50, 50, 150, 100, radius=20, outline='black', fill='#272022')
-login_canvas.place(x=180, y=100)
+#Log in canvas
+canvas = Canvas(main_window, width = 310, height = 380, borderwidth=0, highlightthickness=0, bg='black')
+my_rectangle = roundPolygon([8, 300, 300, 8], [3, 3, 375, 375], 5 , width=3, outline="#272022", fill="#272022")
+canvas.place(x=445, y=73)
 
-# Draw the rounded square
+
+#Log in Label
+login_label = Label(main_window, text="Welcome, Admin!",
+                  font=('Sans', 20, 'bold'),
+                  fg='white', bg='#272022', padx=0, pady=0)
+login_label.place(x=480, y=127)
+
+
+# Create rounded corner text boxes
+userlog = Canvas(main_window, width=250, height = 40, borderwidth=0, highlightthickness=0, bg='white')
+#rectlog = roundPolygon([5, 100, 100, 5], [3, 3, 30, 30], 5, width=3, outline="#FFFFFF", fill="#FFFFFF")
+userlog.place(x=473, y=190)
+
+entry_username = Entry(main_window, width=38, fg="gray")
+entry_username.config(relief= GROOVE, bd=0)
+entry_username.insert(0, "Username")
+entry_username.bind("<FocusIn>", on_username_focus_in)
+entry_username.bind("<FocusOut>", on_username_focus_out)
+entry_username.place(x=490, y=201)
+
+
+passlog = Canvas(main_window, width=250, height = 40, borderwidth=0, highlightthickness=0, bg='white')
+#rectlog = roundPolygon([5, 100, 100, 5], [3, 3, 30, 30], 5, width=3, outline="#FFFFFF", fill="#FFFFFF")
+passlog.place(x=473, y=255)
+
+entry_password = Entry(main_window, width=38, fg="gray")
+entry_password.config(relief= GROOVE, bd=0)
+entry_password.insert(0, "Password")
+entry_password.bind("<FocusIn>", on_password_focus_in)
+entry_password.bind("<FocusOut>", on_password_focus_out)
+entry_password.place(x=490, y=265)
+
+# Create rounded corner login button
+button_login = Button(main_window, text="LOGIN", font=('Sans', 12, 'bold'), command=login, width=38, bg='#EEBA2B')
+button_login.config(relief=GROOVE, bd=2, width=24)
+button_login.place(x=473, y=350)
+
+
 
 main_window.mainloop() #runs main_window
 
-
-def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
-    points = [x1 + radius, y1,
-              x1 + radius, y1,
-              x2 - radius, y1,
-              x2 - radius, y1,
-              x2, y1,
-              x2, y1 + radius,
-              x2, y1 + radius,
-              x2, y2 - radius,
-              x2, y2 - radius,
-              x2, y2,
-              x2 - radius, y2,
-              x2 - radius, y2,
-              x1 + radius, y2,
-              x1 + radius, y2,
-              x1, y2,
-              x1, y2 - radius,
-              x1, y2 - radius,
-              x1, y1 + radius,
-              x1, y1 + radius,
-              x1, y1]
-
-    return login_canvas.create_polygon(points, **kwargs, smooth=True)
 
 
 
