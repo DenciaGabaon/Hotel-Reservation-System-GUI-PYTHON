@@ -1,12 +1,16 @@
 from tkinter import *
+import tkinter as tk
+from menu import *
 from PIL import Image,ImageTk
 from PIL import Image, ImageDraw
 from tkinter import messagebox
 
 
-def menu_window(): #FUNCTION FOR MENU
-    menu = Tk()
+def menu_Window(): #FUNCTION FOR MENU
+    Menu = Tk()
     main_window.destroy()
+
+    """
     menu.overrideredirect(True)  # Remove window decorations
     menu.configure(bg='black')  # Set background color of the entire window
     windowx_width = 1000  # define window dimensions width and height
@@ -19,6 +23,8 @@ def menu_window(): #FUNCTION FOR MENU
 
     menu.geometry(
         f'{windowx_width}x{windowx_height}+{positionx_right}+{positionx_top}')  # this is the line that will center your window
+
+    """
 
     # Create a custom title bar
     title = Frame(main_window, bg='#EEBA2B', height=30)
@@ -33,7 +39,7 @@ def menu_window(): #FUNCTION FOR MENU
     close_bttn = Button(title_bar, text='X', font=('Tahoma', 10, 'bold'), width=1, command=close_window, bg='#EEBA2B')
     close_bttn.pack(side=RIGHT)
 
-    menu.mainloop()
+    Menu.mainloop()
 
 
 def xor_encrypt_decrypt(data, key):
@@ -60,12 +66,44 @@ def login():
       decrypted_user = xor_encrypt_decrypt(encrypted_username, key)
       decrypted_pass = xor_encrypt_decrypt(encrypted_password, key)
 
+      # Switching from main window to menu
+      mainWindow = tk.Tk()
+      mainWindow.title('Login Successful')
+
+      # Center the mainWindow on the screen
+      window_width = 300
+      window_height = 150
+      screen_width = mainWindow.winfo_screenwidth()
+      screen_height = mainWindow.winfo_screenheight()
+      x_pos = (screen_width // 2) - (window_width // 2)
+      y_pos = (screen_height // 2) - (window_height // 2)
+      mainWindow.geometry(f"{window_width}x{window_height}+{x_pos}+{y_pos}")
+
+      text1 = Text(mainWindow, height=1, width=50)
+      text1.tag_configure("center", justify='center')
+
+      welcome_text = "Welcome, " + username + "!"
+      text1.insert(tk.END, welcome_text, "center")
+
+      text1.config(state="disabled")
+
+      text1.pack()
+
+      def open_menu():
+          menu_window()
+
       # Check if the decrypted username and password match the entered values
       if decrypted_user == username and decrypted_pass == password:
-          messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
-          menu_window()
+       #   messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+          btn1 = Button(mainWindow, text='Ok!', bd=3, command=open_menu)
+          btn1.pack()
       elif username == "admin" and password == "password":
-          messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+        #  messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+          btn1 = Button(mainWindow, text='Ok', bd=3, command=open_menu)
+          btn1.pack()
+
+          mainWindow.mainloop()
+
       else:
           messagebox.showerror("Login Failed", "Invalid username or password")
   except FileNotFoundError:
@@ -193,6 +231,7 @@ name_label.place(x=104, y=200)
 logox_label = Label(image=logox_img, borderwidth=0, highlightthickness=0, bg='#0D0D0D')
 logox_label.place(x=13, y=186)
 
+
 #====================================Log in Frame===================================================
 canvas = Canvas(main_window, width = 310, height = 380, borderwidth=0, highlightthickness=0, bg='black')
 my_rectangle = roundPolygon([8, 300, 300, 8], [3, 3, 375, 375], 5, width=3, outline="#272022", fill="#272022")
@@ -227,15 +266,20 @@ entry_password.bind("<FocusIn>", on_password_focus_in)
 entry_password.bind("<FocusOut>", on_password_focus_out)
 entry_password.place(x=490, y=265)
 
+
+
 button_login = Button(main_window, text="LOGIN", font=('Sans', 12, 'bold'), command=login, width=38, bg='#EEBA2B')
 button_login.config(relief=GROOVE, bd=2, width=24)
 button_login.place(x=473, y=350)
 
+
+
 status_label = Label(main_window, text="", font=('Sans', 12, 'bold'), fg='white', width=24, height=1, bg='#272022')
 status_label.place(x=473, y=313)
 
-main_window.mainloop() #runs main_window
 
+
+main_window.mainloop() #runs main_window
 
 
 
