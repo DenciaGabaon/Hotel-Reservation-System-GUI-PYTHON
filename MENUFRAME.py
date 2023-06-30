@@ -1,27 +1,22 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import HOTELINFO_FRAME
+from HOTELINFO_FRAME import HotelInfoFrame
+from MAKERES_FRAME import MakeResFrame
+from RESLIST_FRAME import ResListFrame
+
 
 def openframe1():
-    hotelinfo = Frame(menuWindow, bd=0, bg='white', width=830, height=475)
-    hotelinfo.place(x=322, y=211)
-
-    test = Label(hotelinfo, text="test hotel info frame", font=('tahoma', 40, 'bold'), fg='white', bg='black')
-    test.place(x=300, y=100)
+    hotelinfo_frame = HotelInfoFrame(menuWindow)
+    menuWindow.mainloop()
 
 def openframe2():
-    makeres = Frame(menuWindow, bd=0, bg='white', width=830, height=475)
-    makeres.place(x=322, y=211)
+    makeres_frame = MakeResFrame(menuWindow)
+    menuWindow.mainloop()
 
-    test = Label(makeres, text="test makeres frame", font=('tahoma', 40, 'bold'), fg='white', bg='black')
-    test.place(x=300, y=100)
 def openframe3():
-    resl = Frame(menuWindow, bd=0, bg='white', width=830, height=475)
-    resl.place(x=322, y=211)
-
-    test = Label(resl, text="test resl frame", font=('tahoma', 40, 'bold'), fg='white', bg='black')
-    test.place(x=300, y=100)
+    reslist_frame = ResListFrame(menuWindow)
+    menuWindow.mainloop()
 
 def logout():
     result = messagebox.askyesno("Logout Confirmation", "Are you sure you want to logout?")
@@ -32,6 +27,7 @@ def exit():
     result = messagebox.askyesno("Exit Confirmation", "Are you sure you want to exit?")
     if result:
         menuWindow.destroy()
+
 
 menuWindow = Tk()
 menuWindow.overrideredirect(True)
@@ -86,10 +82,12 @@ HotelInfo_btn = Button(btn_frame, text="HOTEL INFORMATION", width=30, height=2, 
                        fg="white", bd=0, cursor="hand1")
 HotelInfo_btn.place(x=0, y=320)
 
+
 MakeRes_btn = Button(btn_frame, text="MAKE RESERVATION", width=30, height=2, justify='center',
                      font=("Dialog", 13, "bold"), bg="#330201", command=openframe2,
                      fg="white", bd=0, cursor="hand1")
 MakeRes_btn.place(x=0, y=371)
+
 
 ResList_btn = Button(btn_frame, text="RESERVATION LIST", width=30, height=2, justify='center',
                      font=("Dialog", 13, "bold"), bg="#330201", command=openframe3,
