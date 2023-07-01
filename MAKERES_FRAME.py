@@ -4,9 +4,10 @@ from PIL import Image, ImageTk
 from MENUFRAME import *
 
 class MakeResFrame(Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, res_list_frame):
         super().__init__(parent, bd=0, bg='#EEBA2B', width=830, height=475)
         self.place(x=322, y=211)
+        self.res_list_frame = res_list_frame  # Store the ResListFrame instance
 
         test = Label(self, text="Make Reservation", font=('tahoma', 20, 'bold'), fg='white', bg='black')
         test.place(x=250, y=50)
@@ -48,5 +49,8 @@ class MakeResFrame(Frame):
             except IOError as e:
                 print("An error occurred while writing to the file:", e)
 
-        button1=Button(self, text='Add', fg='black', font=('tahoma', 14), command=save_data)
+            # Update the table in the ResListFrame
+            self.res_list_frame.update_table(name, date, room_type, price)
+
+        button1 = Button(self, text='Add', fg='black', font=('tahoma', 14), command=save_data)
         button1.place(x=295, y=380, anchor='center')
