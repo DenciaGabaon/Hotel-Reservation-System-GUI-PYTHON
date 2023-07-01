@@ -5,18 +5,14 @@ from HOTELINFO_FRAME import HotelInfoFrame
 from MAKERES_FRAME import MakeResFrame
 from RESLIST_FRAME import ResListFrame
 
-
 def openframe1():
     hotelinfo_frame = HotelInfoFrame(menuWindow)
-    menuWindow.mainloop()
 
 def openframe2():
-    makeres_frame = MakeResFrame(menuWindow)
-    menuWindow.mainloop()
+    makeres_frame = MakeResFrame(menuWindow, res_list_frame)
 
 def openframe3():
     reslist_frame = ResListFrame(menuWindow)
-    menuWindow.mainloop()
 
 def logout():
     result = messagebox.askyesno("Logout Confirmation", "Are you sure you want to logout?")
@@ -31,6 +27,9 @@ def exit():
 
 menuWindow = Tk()
 menuWindow.overrideredirect(True)
+
+res_list_frame = ResListFrame(menuWindow)
+make_res_frame = MakeResFrame(menuWindow, res_list_frame)
 
 # ========================Makes the window full screen and centered============================================
 window_width = 1200
