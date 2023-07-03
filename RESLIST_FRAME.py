@@ -27,6 +27,9 @@ class ResListFrame(Frame):
         table.heading('Room Type', text='Room Type', anchor=CENTER)
         table.heading('Price', text='Price', anchor=CENTER)
 
+        # table center
+        table.place(relx=0.4, rely=0.3, anchor='center')
+
         # Read data from file and populate the table
         filepath = "list.txt"
         try:
