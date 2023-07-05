@@ -9,24 +9,24 @@ class MakeResFrame(Frame):
         self.place(x=322, y=211)
         self.res_list_frame = res_list_frame  # Store the ResListFrame instance
 
-        test = Label(self, text="Make Reservation", font=('tahoma', 20, 'bold'), fg='white', bg='black')
-        test.place(x=250, y=50)
+        test = Label(self, text="Make Reservation", font=('tahoma', 20, 'bold'), foreground='white', background='black')
+        test.place(x=0, y=50, anchor='w', width=900)
 
         label1=Label(self, text='Name', font=('tahoma', 12, 'bold'), fg='black')
-        label1.place(x=280, y=130, anchor='center')
+        label1.place(x=350, y=130, anchor='center')
         textbox1=Entry(self, fg='black', font=('tahoma', 12))
-        textbox1.place(x=255, y=150)
+        textbox1.place(x=325, y=150)
 
         label2=Label(self, text='Date (mm/dd/yy)', font=('tahoma', 12, 'bold'), fg='black')
-        label2.place(x=330, y=210, anchor='center')
+        label2.place(x=400, y=210, anchor='center')
         textbox2=Entry(self, fg='black', font=('tahoma', 12))
-        textbox2.place(x=255, y=230)
+        textbox2.place(x=325, y=230)
 
         label3=Label(self, text='Room Type', font=('tahoma', 12, 'bold'), fg='black')
-        label3.place(x=305, y=290, anchor='center')
+        label3.place(x=375, y=290, anchor='center')
         combo_box = Combobox(self)
         combo_box['values'] = ('Standard', 'Deluxe', 'Suite')
-        combo_box.place(x=325, y=320, anchor='center')
+        combo_box.place(x=395, y=320, anchor='center')
 
         def save_data():
             name = textbox1.get()
@@ -55,4 +55,4 @@ class MakeResFrame(Frame):
             self.res_list_frame.update_table(room_id, name, date, room_type, price)
 
         button1 = Button(self, text='Add', fg='black', font=('tahoma', 14), command=save_data)
-        button1.place(x=295, y=380, anchor='center')
+        button1.place(x=385, y=380, anchor='center')
