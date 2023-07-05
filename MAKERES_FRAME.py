@@ -43,14 +43,16 @@ class MakeResFrame(Frame):
             filepath = "list.txt"
             tempFile = "temp.txt"
 
+            room_id = self.res_list_frame.room_id_generator()  # Generate room_id
+
             try:
                 with open(filepath, "a") as file:
-                    file.write(f"{name},{date},{room_type},{price}\n")
+                    file.write(f"{room_id},{name},{date},{room_type},{price}\n")
             except IOError as e:
                 print("An error occurred while writing to the file:", e)
 
             # Update the table in the ResListFrame
-            self.res_list_frame.update_table(name, date, room_type, price)
+            self.res_list_frame.update_table(room_id, name, date, room_type, price)
 
         button1 = Button(self, text='Add', fg='black', font=('tahoma', 14), command=save_data)
         button1.place(x=295, y=380, anchor='center')
