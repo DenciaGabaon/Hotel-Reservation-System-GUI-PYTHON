@@ -10,7 +10,7 @@ class ResListFrame(Frame):
         self.place(x=322, y=211)
 
         test = Label(self, text="Reservation List", font=('tahoma', 20, 'bold'), fg='white', bg='black')
-        test.place(x=250, y=50)
+        test.place(x=-70, y=50, anchor='w', width=900)
 
         # Create the Treeview widget for the table
         self.table = Treeview(self, columns=('Room ID', 'Name', 'Date', 'Room Type', 'Price'))
