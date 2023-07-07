@@ -103,4 +103,8 @@ main_frame = Frame(menuWindow, bd=0)
 main_frame.place(x=322, y=211, width=830, height=475)
 main_frame.configure(background='#0D0D0D')
 
+hotelinfo = HotelInfoFrame(main_frame)
+hotelinfo.place(x=0, y=0)
+
+
 menuWindow.mainloop()
